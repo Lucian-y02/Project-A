@@ -8,3 +8,6 @@ GRID_SIZE = 64
 
 # Player
 PLAYER_DEFAULT_SPEED = 4
+
+# Walls
+WALL_SHIFT = 2

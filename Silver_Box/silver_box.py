@@ -2,7 +2,7 @@ import sys
 
 import pygame
 
-from main import Scene
+from scene import Scene
 import game_stuff
 from game_stuff import *
 from player import Player
@@ -18,8 +18,7 @@ class LevelEditorScene(Scene):
     def __init__(self, **kwargs):
         super(LevelEditorScene, self).__init__(**kwargs)
         self.available_objects = available_objects
-        self.fps_show = False
-        self.draw_grid = True
+        self.show_grid = True
         self.active_object = "Box"  # Размещаемый объект
         self.level_date = get_level("created_level.json")
         self.mouse_pressing_add_obj = False  # Удерживается левая клавиша мыши (добавление)
@@ -31,7 +30,7 @@ class LevelEditorScene(Scene):
         self.load_level_on_scene("created_level.json")
         while self.game_run:
             self.check_events()
-            self.draw()
+            self.render()
 
             self.clock.tick(self.FPS)
             pygame.display.update()
@@ -43,8 +42,8 @@ class LevelEditorScene(Scene):
                     event.type == pygame.QUIT):
                 self.game_run = False
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_f:
-                    self.fps_show = not self.fps_show
+                if event.key == pygame.K_g:
+                    self.show_grid = not self.show_grid
                 elif event.key == pygame.K_c and not self.take_object_mod:  # Очистка уровня
                     for key in self.groups_data:
                         self.groups_data[key].remove(self.groups_data[key])
@@ -70,7 +69,6 @@ class LevelEditorScene(Scene):
                     if new_active_object:
                         self.active_object = new_active_object
                         self.take_object_mod = False
-                        self.draw_grid = True
                         self.load_level_on_scene("created_level.json")
             if event.type == pygame.MOUSEBUTTONUP:
                 self.mouse_pressing_remove_obj = False
@@ -80,9 +78,6 @@ class LevelEditorScene(Scene):
                 self.add_object(event.pos)
             if self.mouse_pressing_remove_obj:
                 self.remove_object(event.pos)
-        # Попробовать сделать без этого !!!
-        # for key in self.groups_data:
-        #     self.groups_data[key].update()
 
     def add_object(self, coord):
         self.level_date[f"{coord[0] // 64} {coord[1] // 64}"] = [self.active_object, {}]

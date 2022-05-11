@@ -2,6 +2,8 @@ import pygame
 
 from constants import *
 from player import Player
+from game_stuff import *
+from Silver_Box import level_updater
 
 
 pygame.init()
@@ -21,8 +23,12 @@ class Scene:
 
         # Groups
         self.groups_data = {
-            "players": pygame.sprite.Group()
+            "players": pygame.sprite.Group(),
+            "walls": pygame.sprite.Group()
         }
+
+        # Level
+        self.level_path_now = ""
 
     def check_events(self):
         for event in pygame.event.get():
@@ -67,8 +73,17 @@ class Scene:
         pygame.quit()
         quit()
 
+    def load_level_on_scene(self, path):
+        self.level_path_now = path
+        self.clear_groups_data()
+        level_updater.load_level(path, self.groups_data)
+
+    def clear_groups_data(self):
+        for key in self.groups_data:
+            self.groups_data[key].remove(self.groups_data[key])
+
 
 if __name__ == "__main__":
     scene = Scene()
-    player = Player(scene.groups_data, (10, 5), control="game_pad_1")
+    scene.load_level_on_scene("Levels/Demo/test_level.json")
     scene.play()

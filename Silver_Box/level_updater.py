@@ -3,13 +3,17 @@ import pygame
 
 from player import Player
 from game_stuff import *
-from enemies import Enemy
 
 
 pygame.init()
 
 # Доступные для размещения на уровне объекты
 available_objects = {
+    "Player": [Player, "all_the_groups"],
+    "Box": [Box, "walls"],
+    "PlatformLeft": [PlatformLeft, "walls"],
+    "PlatformRight": [PlatformRight, "walls"],
+    "PlatformMiddle": [PlatformMiddle, "walls"]
 }
 
 
@@ -44,7 +48,7 @@ def load_level(path, groups_data):
             if available_objects[level_data[key][0]][1] == "all_the_groups" else \
             groups_data[available_objects[level_data[key][0]][1]]
         # Координаты
-        obj_coord = (int(key.split()[0]) * 64, int(key.split()[1]) * 64)
+        obj_coord = (int(key.split()[0]), int(key.split()[1]))
         # Именованные аргументы
         obj_kwargs = level_data[key][1]
         # Создание объекта
